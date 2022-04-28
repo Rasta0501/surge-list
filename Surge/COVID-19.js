@@ -1,4 +1,4 @@
-var list = ["中国","江苏","浙江"];
+var list = ["宁波","徐州","上海"];
 const url = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5";
 var ala="";
 var num1="";
@@ -8,35 +8,30 @@ var num22="";
 function num(location, result) {
   var loc = location;
   var resu = result;
-  var loc_new = new RegExp(loc + "[\\s\\S]*?confirm[\\s\\S]{3}(\\d+)");
-  var loc_now = new RegExp(loc + "[\\s\\S]*?nowConfirm[\\s\\S]{3}(\\d+)");
-  let loc_new_res = loc_new.exec(resu);
-  let loc_now_res = loc_now.exec(resu);
-  if (loc_new_res) {
-  num1=loc_new_res[1].padStart(5,"\u0020");
-  num2=loc_now_res[1].padStart(5,"\u0020");
+  var loc_newcf = new RegExp(loc + "[\\s\\S]*?confirm[\\s\\S]{3}(\\d+)");
+  var loc_wzz = new RegExp(loc + "[\\s\\S]*?wzz_add[\\s\\S]{3}(\\d+)");
+  let loc_newcf_res = loc_newcf.exec(resu);
+  let loc_wzz_res = loc_wzz.exec(resu);
+  if (loc_newcf_res) {
+  num1=loc_newcf_res[1].padStart(6,"\u0020");
+  num2=loc_wzz_res[1].padStart(6,"\u0020");
     num11=num1.replace(/\s/g, "");
     num22=num2.replace(/\s/g, "");
-    ala = ala +loc +"           " +num11.padStart(5,"\u0020")+"        "+num22.padStart(5,"\u0020")+ "\n";
+    ala = ala +loc +"：确诊"+num11.padStart(num11.length,"\u0020")+"例，无症状"+num22.padStart(num22.length,"\u0020")+ "例\n";
   } else {
-    ala = ala + loc + "           查无数据\n";
+    ala = ala + loc + "：无数据\n";
   }
 };
 $httpClient.get(url, function(error, response, data){
   let res = data;
-  let now = new Date();
-  let hour = now.getHours();
-  let minutes = now.getMinutes();
-  hour = hour > 9 ? hour : "0" + hour;
-  minutes = minutes > 9 ? minutes : "0" + minutes;
   for (var i = 0; i < list.length; i++) {
     num(list[i], res);
     if (i == list.length - 1) {
      $done({
-       title: "COVID-19:   新增   |   现存   |   "+hour+":"+minutes,
+       title: "COVID-19",
        icon:"heart.text.square",
        "icon-color":"#E94335",
-       content: ala.replace(/\n$/, "").replace("中国", "全国")
+       content: ala.replace(/\n$/, "").replace("确诊0例", "无").replace("无症状0例", "无").replace("无，无", "无")
      });
     }
   }

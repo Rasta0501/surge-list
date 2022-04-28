@@ -50,19 +50,9 @@ let nowlist = now();
 function today(day) {
   let daythis = day;
   if (daythis == "0") {
-    datenotice();
     return "🎉";
   } else {
     return daythis;
-  }
-}
-
-//提醒日当天发送通知
-function datenotice() {
-  if ($persistentStore.read("timecardpushed") != tlist[nowlist][1] && tnow.getHours() >= 6) {
-    $persistentStore.write(tlist[nowlist][1], "timecardpushed");
-    $notification.post("今天是" + tlist[nowlist][1].replace("距离", "") + tlist[nowlist][0] + "   🎉")
-  } else if ($persistentStore.read("timecardpushed") == tlist[nowlist][1]) {
   }
 }
 
